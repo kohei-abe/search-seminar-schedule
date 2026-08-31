@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#132f2b">
-  <title>研修日程検索｜2026年10月〜2027年3月</title>
+  <title>東京研修 日程ナビ｜2026年10月〜2027年3月</title>
   <meta name="description" content="会社契約の外部研修を、キーワード・カテゴリ・月・開催形式で探せる日程一覧です。">
   <style>
     :root {
@@ -51,8 +51,9 @@
       box-shadow: 0 12px 30px rgba(19, 47, 43, .07);
       backdrop-filter: blur(14px);
     }
-    .filter-grid { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(120px, 1fr)); gap: 10px; }
+    .filter-grid { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
     .field { position: relative; }
+    .search-field { grid-column: span 2; }
     .field label { display: block; margin: 0 0 5px 3px; color: var(--muted); font-size: 11px; font-weight: 800; }
     .field input, .field select {
       width: 100%;
@@ -68,9 +69,14 @@
     .field .search-mark { position: absolute; left: 14px; bottom: 11px; color: var(--muted); }
     .field input:focus, .field select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13, 116, 106, .12); }
     .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 13px; }
+    .toolbar-main { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
     .view-switch { display: inline-flex; padding: 4px; border-radius: 11px; background: #eceae3; }
     .view-button { border: 0; border-radius: 8px; padding: 7px 13px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; }
     .view-button.active { background: #fff; color: var(--ink); box-shadow: 0 2px 7px rgba(19, 47, 43, .1); }
+    .favorites-filter { display: inline-flex; align-items: center; gap: 7px; min-height: 39px; border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; background: #fff; color: var(--muted); font-size: 12px; font-weight: 900; }
+    .favorites-filter.active { border-color: #d9ae25; background: #fff5ca; color: #6f5107; }
+    .favorite-count { display: inline-grid; place-items: center; min-width: 21px; height: 21px; border-radius: 999px; background: #eceae3; color: var(--ink); font-size: 10px; }
+    .favorites-filter.active .favorite-count { background: #fff; color: #6f5107; }
     .clear-button { border: 0; background: transparent; color: var(--teal); padding: 6px; font-size: 12px; font-weight: 800; }
 
     .results-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 28px 0 16px; }
@@ -91,9 +97,15 @@
       transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
     }
     .course-card:hover { transform: translateY(-2px); border-color: rgba(13, 116, 106, .3); box-shadow: var(--shadow); }
-    .badges { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 13px; }
+    .course-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 7px; }
     .badge { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 9px; border-radius: 999px; background: var(--teal-soft); color: var(--teal); font-size: 10px; font-weight: 900; letter-spacing: .03em; }
     .badge.online { background: var(--accent-soft); color: #b83e28; }
+    .card-quick-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 7px; }
+    .favorite-button { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; min-height: 30px; border: 1px solid var(--line); border-radius: 9px; padding: 5px 9px; background: #fff; color: var(--muted); font-size: 11px; font-weight: 900; }
+    .favorite-button:hover { border-color: #d9ae25; color: #755709; }
+    .favorite-button.active { border-color: #d9ae25; background: #fff5ca; color: #755709; }
+    .favorite-button.compact { width: 34px; height: 34px; justify-content: center; padding: 0; font-size: 17px; }
     .course-card h3 { margin: 0; font-size: 18px; line-height: 1.45; letter-spacing: -.02em; }
     .audience { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
     .audience-label { margin-right: 2px; color: var(--muted); font-size: 10px; font-weight: 900; letter-spacing: .08em; }
@@ -118,10 +130,11 @@
     .all-session { padding: 8px 9px; border: 1px solid var(--line); border-radius: 9px; background: #fff; font-size: 11px; font-variant-numeric: tabular-nums; }
     .detail-link { display: inline-flex; align-items: center; gap: 7px; border-radius: 10px; background: var(--ink); color: #fff; padding: 9px 12px; text-decoration: none; font-size: 12px; font-weight: 900; }
     .detail-link:hover { background: var(--teal); }
+    .card-quick-actions .detail-link { min-height: 30px; border-radius: 9px; padding: 5px 10px; font-size: 11px; white-space: nowrap; }
 
     .timeline { display: grid; gap: 12px; padding-bottom: 80px; }
     .month-heading { position: sticky; top: 138px; z-index: 5; width: fit-content; margin: 18px 0 2px; padding: 6px 13px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 900; }
-    .timeline-item { display: grid; grid-template-columns: 112px minmax(0, 1fr) 120px; gap: 18px; align-items: center; padding: 15px 18px; border: 1px solid rgba(19, 47, 43, .12); border-radius: 16px; background: var(--card); }
+    .timeline-item { display: grid; grid-template-columns: 112px minmax(0, 1fr) 120px 34px; gap: 18px; align-items: center; padding: 15px 18px; border: 1px solid rgba(19, 47, 43, .12); border-radius: 16px; background: var(--card); }
     .date-box { display: flex; align-items: baseline; gap: 7px; font-variant-numeric: tabular-nums; }
     .date-box strong { font-family: Georgia, serif; font-size: 28px; line-height: 1; }
     .date-box span { color: var(--muted); font-size: 12px; }
@@ -151,16 +164,19 @@
       .filters-wrap { position: static; }
       .results-head { align-items: flex-start; flex-direction: column; }
       .course-card { padding: 18px; }
+      .course-card-top { align-items: flex-start; }
+      .favorite-button:not(.compact) span:last-child { display: none; }
       .session-chip { grid-template-columns: 82px 1fr; }
       .session-chip .part { grid-column: 1 / -1; }
       .all-sessions { grid-template-columns: 1fr; }
       .month-heading { top: 8px; }
       .timeline-item { grid-template-columns: 96px minmax(0, 1fr); gap: 10px; }
       .timeline-time { grid-column: 2; text-align: left; }
+      .timeline-item .favorite-button { grid-column: 1; grid-row: 2; }
     }
     @media print {
       body { background: #fff; }
-      .filters-wrap, .back-top, .view-switch, .sort-label, footer { display: none !important; }
+      .filters-wrap, .back-top, .view-switch, .sort-label, .favorite-button, footer { display: none !important; }
       .course-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
       .course-card { break-inside: avoid; box-shadow: none; padding: 14px; }
       details { display: none; }
@@ -182,7 +198,7 @@
           <div class="field search-field">
             <label for="search">キーワード</label>
             <span class="search-mark" aria-hidden="true">⌕</span>
-            <input id="search" type="search" placeholder="例：タイムマネジメント、報連相" autocomplete="off">
+            <input id="search" type="search" placeholder="例：管理職、ロジカル、財務" autocomplete="off">
           </div>
           <div class="field">
             <label for="category">関連テーマ</label>
@@ -204,11 +220,34 @@
               <option value="online">ライブオンライン</option>
             </select>
           </div>
+          <div class="field">
+            <label for="weekday">曜日</label>
+            <select id="weekday">
+              <option value="">すべての曜日</option>
+              <option value="月">月曜日</option>
+              <option value="火">火曜日</option>
+              <option value="水">水曜日</option>
+              <option value="木">木曜日</option>
+              <option value="金">金曜日</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="timePeriod">時間帯</label>
+            <select id="timePeriod">
+              <option value="">すべての時間帯</option>
+              <option value="morning">午前（12時前に開始）</option>
+              <option value="afternoon">午後（12〜15時台に開始）</option>
+              <option value="evening">夕方（16時以降に開始）</option>
+            </select>
+          </div>
         </div>
         <div class="toolbar">
-          <div class="view-switch" role="group" aria-label="表示形式">
-            <button class="view-button active" data-view="courses" type="button">研修別</button>
-            <button class="view-button" data-view="timeline" type="button">日程順</button>
+          <div class="toolbar-main">
+            <div class="view-switch" role="group" aria-label="表示形式">
+              <button class="view-button active" data-view="courses" type="button">研修別</button>
+              <button class="view-button" data-view="timeline" type="button">日程順</button>
+            </div>
+            <button class="favorites-filter" id="favoritesOnly" type="button" aria-pressed="false"><span aria-hidden="true">★</span> お気に入りのみ <span class="favorite-count" id="favoriteCount">0</span></button>
           </div>
           <button class="clear-button" id="clearFilters" type="button">条件をクリア</button>
         </div>
@@ -250,15 +289,23 @@
       target: document.querySelector('#target'),
       month: document.querySelector('#month'),
       format: document.querySelector('#format'),
+      weekday: document.querySelector('#weekday'),
+      timePeriod: document.querySelector('#timePeriod'),
       sort: document.querySelector('#sort'),
       sortWrap: document.querySelector('#sortWrap'),
       grid: document.querySelector('#courseGrid'),
       timeline: document.querySelector('#timeline'),
       count: document.querySelector('#resultCount'),
       clear: document.querySelector('#clearFilters'),
+      favoritesOnly: document.querySelector('#favoritesOnly'),
+      favoriteCount: document.querySelector('#favoriteCount'),
       backTop: document.querySelector('#backTop'),
     };
     let currentView = 'courses';
+    let favoritesOnly = false;
+    const favoriteStorageKey = 'tokyo-training-favorites-v1';
+    const validCourseIds = new Set(courses.map(course => course.id));
+    const favorites = loadFavorites();
 
     const dateFormatter = new Intl.DateTimeFormat('ja-JP', { month: 'numeric', day: 'numeric', weekday: 'short' });
     const monthFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: 'long' });
@@ -274,12 +321,55 @@
     function escapeHtml(value) {
       return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
     }
+    function loadFavorites() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(favoriteStorageKey) || '[]');
+        return new Set(Array.isArray(stored) ? stored.filter(id => validCourseIds.has(id)) : []);
+      } catch {
+        return new Set();
+      }
+    }
+    function saveFavorites() {
+      try {
+        localStorage.setItem(favoriteStorageKey, JSON.stringify([...favorites]));
+      } catch {
+        // 閲覧環境で保存が制限されている場合も、その場では利用できます。
+      }
+    }
+    function toggleFavorite(courseId) {
+      if (favorites.has(courseId)) favorites.delete(courseId);
+      else favorites.add(courseId);
+      saveFavorites();
+      render();
+    }
+    function favoriteButtonMarkup(course, compact = false) {
+      const active = favorites.has(course.id);
+      const label = active ? 'お気に入りから外す' : 'お気に入りに追加';
+      return `<button class="favorite-button${active ? ' active' : ''}${compact ? ' compact' : ''}" type="button" data-favorite-id="${escapeHtml(course.id)}" aria-pressed="${active}" aria-label="${label}：${escapeHtml(course.title)}"><span aria-hidden="true">${active ? '★' : '☆'}</span>${compact ? '' : '<span>お気に入り</span>'}</button>`;
+    }
+    function updateFavoriteControls() {
+      elements.favoriteCount.textContent = favorites.size.toLocaleString('ja-JP');
+      elements.favoritesOnly.classList.toggle('active', favoritesOnly);
+      elements.favoritesOnly.setAttribute('aria-pressed', String(favoritesOnly));
+    }
     function formatSession(session) {
       return dateFormatter.format(localDate(session.date));
     }
-    function filteredSessions(course) {
+    function sessionMatches(session) {
       const selectedMonth = elements.month.value;
-      return selectedMonth ? course.sessions.filter(session => session.date.startsWith(selectedMonth)) : course.sessions;
+      const selectedWeekday = elements.weekday.value;
+      const selectedTimePeriod = elements.timePeriod.value;
+      if (selectedMonth && !session.date.startsWith(selectedMonth)) return false;
+      if (selectedWeekday && session.weekday !== selectedWeekday) return false;
+      if (selectedTimePeriod) {
+        const hour = Number(session.start.slice(0, 2));
+        const period = hour < 12 ? 'morning' : hour < 16 ? 'afternoon' : 'evening';
+        if (period !== selectedTimePeriod) return false;
+      }
+      return true;
+    }
+    function filteredSessions(course) {
+      return course.sessions.filter(sessionMatches);
     }
     function matches(course) {
       const query = normalize(elements.search.value.trim());
@@ -290,7 +380,8 @@
       if (target && !course.targets.includes(target)) return false;
       if (format === 'online' && !course.online) return false;
       if (format === 'venue' && course.online) return false;
-      if (elements.month.value && filteredSessions(course).length === 0) return false;
+      if (favoritesOnly && !favorites.has(course.id)) return false;
+      if (filteredSessions(course).length === 0) return false;
       if (query && !normalize(`${course.title} ${course.summary} ${course.relatedTheme} ${course.relatedThemeKey} ${course.targets.join(' ')}`).includes(query)) return false;
       return true;
     }
@@ -301,9 +392,15 @@
       const sessions = filteredSessions(course);
       const visible = sessions.slice(0, 3);
       return `<article class="course-card">
-        <div class="badges">
-          <span class="badge">関連テーマ · ${escapeHtml(course.relatedTheme)}</span>
-          ${course.online ? '<span class="badge online">LIVEオンライン</span>' : '<span class="badge">東京会場</span>'}
+        <div class="course-card-top">
+          <div class="badges">
+            <span class="badge">関連テーマ · ${escapeHtml(course.relatedTheme)}</span>
+            ${course.online ? '<span class="badge online">LIVEオンライン</span>' : '<span class="badge">東京会場</span>'}
+          </div>
+          <div class="card-quick-actions">
+            ${favoriteButtonMarkup(course)}
+            ${course.url ? `<a class="detail-link" href="${escapeHtml(course.url)}" target="_blank" rel="noopener noreferrer">予約 <span aria-hidden="true">↗</span></a>` : ''}
+          </div>
         </div>
         <h3>${escapeHtml(course.title)}</h3>
         <div class="audience"><span class="audience-label">対象</span>${course.targets.map(target => `<span class="audience-item">${escapeHtml(target)}</span>`).join('')}</div>
@@ -315,7 +412,6 @@
           <div class="detail-body">
             <div class="detail-copy">${escapeHtml(course.summary)}</div>
             <div class="all-sessions">${sessions.map(session => `<div class="all-session">${escapeHtml(formatSession(session))}　${escapeHtml(session.start)}–${escapeHtml(session.end)}${session.part ? `　<span class="part">${escapeHtml(session.part)}</span>` : ''}</div>`).join('')}</div>
-            ${course.url ? `<a class="detail-link" href="${escapeHtml(course.url)}" target="_blank" rel="noopener noreferrer">研修の詳細・申込ページへ <span aria-hidden="true">↗</span></a>` : ''}
           </div>
         </details>
       </article>`;
@@ -339,10 +435,11 @@
         <div class="date-box"><strong>${date.getDate()}</strong><span>${date.toLocaleDateString('ja-JP', { month: 'short', weekday: 'short' })}</span></div>
         <div class="timeline-title"><a href="${escapeHtml(item.course.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.course.title)}</a><small>関連テーマ: ${escapeHtml(item.course.relatedTheme)} ／ 対象: ${escapeHtml(item.course.targets.join('・'))} ／ ${item.course.online ? 'ライブオンライン' : '東京会場'}${item.part ? ` ／ ${escapeHtml(item.part)}` : ''}</small></div>
         <div class="timeline-time">${escapeHtml(item.start)}–${escapeHtml(item.end)}</div>
+        ${favoriteButtonMarkup(item.course, true)}
       </article>`;
     }
     function renderTimeline() {
-      const visible = allSessions.filter(item => matches(item.course) && (!elements.month.value || item.date.startsWith(elements.month.value)));
+      const visible = allSessions.filter(item => matches(item.course) && sessionMatches(item));
       visible.sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start) || collator.compare(a.course.title, b.course.title));
       let previousMonth = '';
       const output = [];
@@ -361,6 +458,7 @@
       return '<div class="empty"><strong>該当する研修がありません</strong>キーワードを短くするか、絞り込み条件を変更してください。</div>';
     }
     function render() {
+      updateFavoriteControls();
       if (currentView === 'courses') renderCourses(); else renderTimeline();
     }
     function setView(view) {
@@ -381,15 +479,26 @@
     for (const month of months) elements.month.add(new Option(monthFormatter.format(localDate(`${month}-01`)), month));
     document.querySelector('#sourceFile').textContent = metadata.sourceFile;
 
-    [elements.search, elements.category, elements.target, elements.month, elements.format, elements.sort].forEach(element => element.addEventListener(element.tagName === 'INPUT' ? 'input' : 'change', render));
+    [elements.search, elements.category, elements.target, elements.month, elements.format, elements.weekday, elements.timePeriod, elements.sort].forEach(element => element.addEventListener(element.tagName === 'INPUT' ? 'input' : 'change', render));
     document.querySelectorAll('.view-button').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+    elements.favoritesOnly.addEventListener('click', () => {
+      favoritesOnly = !favoritesOnly;
+      render();
+    });
+    document.addEventListener('click', event => {
+      const button = event.target instanceof Element ? event.target.closest('[data-favorite-id]') : null;
+      if (button) toggleFavorite(button.dataset.favoriteId);
+    });
     elements.clear.addEventListener('click', () => {
       elements.search.value = '';
       elements.category.value = '';
       elements.target.value = '';
       elements.month.value = '';
       elements.format.value = '';
+      elements.weekday.value = '';
+      elements.timePeriod.value = '';
       elements.sort.value = 'date';
+      favoritesOnly = false;
       render();
       elements.search.focus();
     });
